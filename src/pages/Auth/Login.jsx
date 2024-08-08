@@ -6,49 +6,53 @@ import logo from "../../assets/appoinment-logo.jpg";
 import baseURL from "../../config";
 import Swal from "sweetalert2";
 import { IconLock } from "@tabler/icons-react";
+import { usePostLoginMutation } from "../../redux/api/Post/postLoginApi";
 
 const Login = () => {
     const navigate = useNavigate();
-    const onFinish = async ({ email, password }) => {
-        // console.log(values);
-        // try {
-        //   const response = await baseURL.post(
-        //     `/user/sign-in`,
-        //     { email, password, loginType:3 },
-        //     {
-        //       headers: {
-        //         "Content-Type": "application/json",
-        //         authentication: `Bearer ${localStorage.getItem("token")}`,
-        //       },
-        //     }
-        //   );
-        //   console.log(response);
-        //   if (response?.data?.statusCode == 200) {
-        //     localStorage.setItem("token", response?.data?.data?.token);
-        //     localStorage.setItem(
-        //       "user-update",
-        //       JSON.stringify(response?.data?.data?.attributes)
-        //     );
-        //   }
-        //   Swal.fire({
-        //     position: "top-center",
-        //     icon: "success",
-        //     title: response?.data?.message,
-        //     showConfirmButton: false,
-        //     timer: 1500,
-        //   });
-        //   navigate("/");
-        // } catch (error) {
-        //   console.log(error);
-        //   Swal.fire({
-        //     icon: "error",
-        //     title: "Try Again...",
-        //     text: error?.response?.data?.message,
-        //     footer: '<a href="#">Why do I have this issue?</a>',
-        //   });
-        // }
-        navigate("/");
-      };
+    const [setData] = usePostLoginMutation();
+
+
+    const onFinish = async (value) => {
+    console.log(value);
+    try {
+      const response = await setData(value);
+      console.log(response);
+   
+      if (response?.data?.statusCode == 200) {
+        if(response?.data?.data?.type == "ADMIN"){
+    
+          localStorage.setItem("token", response?.data?.data?.token);
+          localStorage.setItem(
+            "user-update",
+            JSON.stringify(response?.data?.data?.user)
+          );
+          Swal.fire({
+            position: "top-center",
+            icon: "success",
+            title: response?.data?.message,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          navigate("/");
+        // console.log(data);
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Login Failed , Try Again...",
+          text: "You are not a Admin",
+        });
+      }
+    }
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed , Try Again...",
+        text: error?.data?.message,
+      });
+    }
+  };
     return (
         <div className=" bg-secondary px-[100px] py-[40px] rounded-xl border-2 border-secondary">
         <div className="">
