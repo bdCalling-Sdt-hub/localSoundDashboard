@@ -1,52 +1,49 @@
-import { IconLock } from "@tabler/icons-react";
 import { Button, Form, Input } from "antd";
-
 import { HiOutlineMailOpen } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../../assets/appoinment-logo.jpg";
+// import logo from "../../assets/appoinment-logo.jpg";
 import { GoArrowLeft } from "react-icons/go";
-import baseURL from "../../config";
 import Swal from "sweetalert2";
+import { CustomSpinner } from "../../Components/Spinners/Spinner";
+import { useForgotPasswordMutation } from "../../redux/features/Auth/authApi";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
+  const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
   const onFinish = async (values) => {
-    console.log(values);
-    navigate(`/auth/verify/${values?.email}`);
-    //   try {
-    //     const response = await baseURL.post(
-    //       `/user/forgot-password`,values, {
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //           authentication: `Bearer ${localStorage.getItem("token")}`,
-    //         },
-    //       }
-    //     )
-    //     console.log(response?.data);
-    //     if(response?.data?.statusCode == 200){
-    //       Swal.fire({
-    //         position: "top-center",
-    //         icon: "success",
-    //         title: response?.data?.message,
-    //         showConfirmButton: false,
-    //         timer: 1500,
-    //       });
-    //       navigate(`/auth/verify/${values?.email}`);
-    //     }
-    //   } catch (error) {
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "Try Again...",
-    //       text: error?.response?.data?.message,
-    //       footer: '<a href="#">Why do I have this issue?</a>',
-    //     });
-    //   }
+    try {
+      const response = await forgotPassword(values);
+      // console.log(response);
+      if (response?.data?.statusCode == 200) {
+        navigate(`/auth/verify/${response.data?.data?.id}`);
+        Swal.fire({
+          position: "top-center",
+          icon: "success",
+          title: response?.data?.message,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          text:
+            response?.data?.message ||
+            response?.error?.data?.message ||
+            "Something went wrong. Please try again later.",
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        // title: "Login Failed , Try Again...",
+        text: "Something went wrong. Please try again later.",
+      });
+    }
   };
   return (
     <div className="mx-[310px]  bg-secondary px-[115px] py-[40px] rounded-xl border-2 border-secondary">
       <div>
         <div className="w-[500px]">
-          {/* <img src={logo} className="mx-auto w-[50%]" alt="" /> */}
           <div className="flex items-center justify-center gap-2">
             <Link to="/auth">
               {" "}
@@ -62,7 +59,6 @@ const ForgotPassword = () => {
           </p>
           <Form
             name="normal_login"
-            // className="login-form"
             labelCol={{ span: 22 }}
             wrapperCol={{ span: 40 }}
             layout="vertical"
@@ -72,33 +68,31 @@ const ForgotPassword = () => {
             onFinish={onFinish}
             className="space-y-1"
           >
-            <Input
-              size="large"
-              placeholder="Enter Your Email"
-              name="email"
-              type="email"
-              prefix={
-                <HiOutlineMailOpen
-                  className="mr-2 bg-primary rounded-full p-[6px]"
-                  size={28}
-                  color="white"
-                />
-              }
-              style={{
-                border: "2px solid #57B660",
-                height: "62px",
-                background: "#CBE8CE",
-                outline: "none",
-                marginBottom: "10px",
-              }}
-              required
-              bordered={false}
-            />
-
+            <Form.Item name="email">
+              <Input
+                size="large"
+                placeholder="Enter Your email"
+                type="email"
+                prefix={
+                  <HiOutlineMailOpen
+                    className="mr-2 bg-primary rounded-full p-[6px]"
+                    size={28}
+                    color="white"
+                  />
+                }
+                style={{
+                  border: "2px solid #57B660",
+                  height: "62px",
+                  background: "#CBE8CE",
+                  outline: "none",
+                  marginBottom: "10px",
+                }}
+                required
+              />
+            </Form.Item>
             <Form.Item>
               <Button
-                // type="primary"
-
+                disabled={isLoading}
                 style={{
                   backgroundColor: "#57B660",
                   color: "#fff",
@@ -106,17 +100,10 @@ const ForgotPassword = () => {
                   height: "56px",
                 }}
                 htmlType="submit"
-                className="block w-[500px] hover:bg-secondary h-[56px] px-2 py-4 mt-2 text-white bg-secondary rounded-lg"
+                className="w-full hover:bg-secondary h-[56px] px-2 py-4 mt-2 text-white bg-secondary rounded-lg flex justify-center items-center gap-1 disabled:cursor-wait"
               >
-                Send OTP
+                Send OTP {isLoading && <CustomSpinner />}
               </Button>
-              {/* <Link to="/dashboard"
-        // type="primary"
-        // htmlType="submit"
-        className="block text-center w-[350px] h-[56px] px-2 py-4 mt-2 hover:text-white text-white bg-[#3BA6F6] rounded-lg"
-      >
-        Log In
-      </Link> */}
             </Form.Item>
           </Form>
         </div>

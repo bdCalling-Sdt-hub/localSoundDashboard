@@ -9,9 +9,8 @@ const Main = () => {
       <div className="fixed top-3 left-3 h-[90%]">
       <Sidebar />
       </div>
-     
       <div className="flex flex-col flex-1 overflow-hidden">
-        <div className="ml-[350px] fixed top-3 w-[calc(100%-400px)] z-10">
+        <div className="ml-[350px] fixed top-3 w-[calc(100%-410px)] z-20">
           <Header />
         </div>
         <div className="overflow-y-auto h-full flex-1 ml-[74px] pt-[80px] pl-[275px]">

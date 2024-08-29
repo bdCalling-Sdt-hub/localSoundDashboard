@@ -46,7 +46,7 @@
 .ant-modal .ant-modal-content {
   background-color: #CBE8CE;
   /* border: 2px solid #FA1131; */
-  padding: 0px;
+  padding: 0px; 
 }
 
 .ant-modal .ant-modal-close {

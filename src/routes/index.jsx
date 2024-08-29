@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import AdminRoutes from "./AdminRoute";
 import Main from "../layouts/Main/Main";
 import Auth from "../layouts/Auth/Auth";
@@ -31,6 +31,7 @@ import Subscription from "../pages/Main/Subscription/Subscription";
 import AddSubscription from "../pages/Main/AddSubscription/AddSubscription";
 import EditSubscription from "../pages/Main/EditSubscription/EditSubscription";
 import SongList from "../pages/Main/SongList/SongList";
+import Resells from "../pages/Main/Resells/Resells";
 
 const router = createBrowserRouter([
     {
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
                 element: <Artists />,
               },
               {
+                path: "/resells",
+                element: <Resells />,
+              },
+              {
                 path: "/appointments",
                 element: <Appointments />,
               },
@@ -62,7 +67,7 @@ const router = createBrowserRouter([
                 element: <AddSubscription />,
               },
               {
-                path: "/subscription/edit-subscription",
+                path: "/subscription/edit-subscription/:id",
                 element: <EditSubscription />,
               },
               {
@@ -129,12 +134,12 @@ const router = createBrowserRouter([
         children: [
           {
             path: "/auth",
-            element: <Login/>,
+            element: <Navigate to={"login"}/>,
           },
-          // {
-          //   path: "login",
-          //   element: <Login />,
-          // },
+          {
+            path: "login",
+            element: <Login />,
+          },
           {
             path: "forgot-password",
             element: <ForgotPassword/>,

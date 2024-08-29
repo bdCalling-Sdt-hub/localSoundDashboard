@@ -25,13 +25,11 @@ function calculateTimeDifference(dateString) {
 }
 
 const NotificationCart = ({item}) => {
-    const createdAt = "2022-01-01T00:00:00.000Z";
-    const message = "You have received $500 from John Doe";
-//   const {message,createdAt} = item;
+  const {message,createdAt} = item;
     return (
         <div  className={`flex rounded-lg my-[16px]  ${
             "true" ? "bg-secondary" : "bg-[#e8e6fca8]"
-        } p-[16px] gap-[16px] justify-between items-center`}>
+        } p-[16px] gap-[16px] justify-between items-center pl-2 pr-8`}>
              <div className={`flex gap-[16px] items-center p-[16px] `}>
               {/* <div className="w-10 h-10 flex p-[7px] rounded bg-[#EEF6EA] "> */}
               <IoIosNotificationsOutline
@@ -48,7 +46,7 @@ const NotificationCart = ({item}) => {
             
             </div>
             <div>
-                <small className="">{calculateTimeDifference(createdAt)}</small>
+                <small className="text-gray-500">{calculateTimeDifference(createdAt)}</small>
             </div>
         </div>
     );

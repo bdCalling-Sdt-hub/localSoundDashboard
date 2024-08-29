@@ -5,24 +5,19 @@ import { CiCalendarDate } from "react-icons/ci";
 // import "react-phone-number-input/style.css";
 // import PhoneInput from "react-phone-number-input";
 import { useNavigate } from "react-router-dom";
+import LoaderWraperComp from "../../../Components/LoaderWraperComp";
+import adminUndraw from "../../../assets/admin-undraw.png";
+import { useGetUserByTokenQuery } from "../../../redux/features/Users/userApi";
 
 const ProfileInformation = () => {
-    const [currentUser,setCurrentUser] = useState()
   const navigate = useNavigate();
-  const baseUrl = import.meta.env.VITE_API_URL;
-  useEffect(()=>{
-    const storedUser = localStorage.getItem('user-update');
-    const user = JSON.parse(storedUser);
-    console.log(user);
-    setCurrentUser(user);
-  },[])
-  console.log("uuuuuser",currentUser);
-    return (
-        <div>
+  const { data, isLoading, isError } = useGetUserByTokenQuery(undefined);
+  return (
+    <div>
       <div className="flex justify-between items-center ml-[14px] mt-[20px] mb-[33px]">
         <h1 className="text-[30px] font-medium">Profile Information</h1>
         <div
-            onClick={(e) =>navigate(`/edit-profile/${currentUser?._id}`)}
+          onClick={(e) => navigate(`/edit-profile/${data?.daata?.id}`)}
           className="flex gap-2 items-center py-[15px]
                  px-[40px]
                   bg-primary
@@ -35,37 +30,39 @@ const ProfileInformation = () => {
           <p>Edit Profile</p>
         </div>
       </div>
-      <div className="lg:flex ml-[14px] p-[36px] rounded-xl gap-5">
-        <div className="w-[33%] bg-secondary rounded-xl ml-[24px] flex flex-col justify-center items-center gap-[30px] p-10">
-          <img
-            className="w-[242px] h-[242px] rounded-full"
-            // src={`${import.meta.env.VITE_BASE_URL}${currentUser?.image?.publicFileURL}`}
-            src="https://i.ibb.co/VBcnsLy/download.jpg"
-            alt=""
-          />
-          <div className="flex flex-col justify-center items-center">
-            <p className="text-[20px] ">{currentUser?.role?.toUpperCase() || "Admin"}</p>
-            <h1 className="text-[30px] font-medium">
-             {currentUser?.name?.toUpperCase() || "Ahad Hossain Aiman"}
-            </h1>
+      <LoaderWraperComp isError={isError} isLoading={isLoading}>
+        <div className="lg:flex ml-[14px] p-[36px] rounded-xl gap-5">
+          <div className="w-[33%] bg-secondary rounded-xl ml-[24px] flex flex-col justify-center items-center gap-[30px] p-10">
+            <img
+              className="w-[242px] h-[242px] rounded-full"
+              src={
+                data?.data?.image
+                  ? `${import.meta.env.VITE_SERVER_URL}/${data?.data?.image}`
+                  : adminUndraw
+              }
+              alt=""
+            />
+            <div className="flex flex-col justify-center items-center">
+              <p className="text-[20px] ">
+                {data?.data?.type.toUpperCase() || "Admin"}
+              </p>
+              <h1 className="text-[30px] font-medium">
+                {data?.data?.name?.toUpperCase() || "Ahad Hossain Aiman"}
+              </h1>
+            </div>
           </div>
-        </div>
 
-        <div className="flex-1 w-[66%]">
-          <div className="flex flex-col gap-[24px]">
-            <div className="flex gap-[25px]">
-              <div className="flex-1">
-                <label
-                  htmlFor=""
-                  className=" text-[18px] font-medium"
-                >
-                  Name
-                </label>
-                <Input
-              
-                  placeholder="First name"
-                  value={currentUser?.name}
-                  className="p-4 bg-secondary
+          <div className="flex-1">
+            <div className="flex flex-col gap-[24px]">
+              <div className="flex gap-[25px]">
+                <div className="flex-1">
+                  <label htmlFor="" className=" text-[18px] font-medium">
+                    Name
+                  </label>
+                  <Input
+                    placeholder="First name"
+                    value={data?.data?.name || "N/A"}
+                    className="p-4 bg-secondary
                   rounded w-full 
                   justify-start 
                   border-2 
@@ -73,24 +70,44 @@ const ProfileInformation = () => {
                   mt-[12px]
                   items-center
                   gap-4 inline-flex  focus:bg-secondary hover:bg-secondary hover:border-primary"
+                    type="text"
+                    readOnly
+                  />
+                </div>
+              </div>
+              <div className="flex-1">
+                <label
+                  htmlFor=""
+                  className="  text-[18px] font-medium mb-[12px]"
+                >
+                  Email
+                </label>
+                <Input
+                  placeholder="Email"
+                  value={data?.data?.email || "N/A"}
+                  className="p-4 bg-secondary
+                rounded w-full 
+                justify-start 
+                border-2 
+                border-primary
+                mt-[12px]
+                items-center
+                gap-4 inline-flex  focus:bg-secondary hover:bg-secondary hover:border-primary"
                   type="text"
                   readOnly
                 />
               </div>
-              
-            </div>
-            <div className="flex-1">
-              <label
-                htmlFor=""
-                className="  text-[18px] font-medium mb-[12px]"
-              >
-                Email
-              </label>
-              <Input
-          
-                placeholder="Email"
-                value={currentUser?.email}
-                className="p-4 bg-secondary
+              <div className="flex-1">
+                <label
+                  htmlFor=""
+                  className="  text-[18px] font-medium mb-[12px]"
+                >
+                  Phone Number
+                </label>
+                <Input
+                  placeholder="Phone"
+                  value={data?.data?.number || "N/A"}
+                  className="p-4 bg-secondary
                 rounded w-full 
                 justify-start 
                 border-2 
@@ -98,33 +115,11 @@ const ProfileInformation = () => {
                 mt-[12px]
                 items-center
                 gap-4 inline-flex  focus:bg-secondary hover:bg-secondary hover:border-primary"
-                type="text"
-                readOnly
-              />
-            </div>
-            <div className="flex-1">
-              <label
-                htmlFor=""
-                className="  text-[18px] font-medium mb-[12px]"
-              >
-                Phone Number
-              </label>
-              <Input
-                placeholder="Phone"
-                value={currentUser?.phone || "Not Provided"}
-                className="p-4 bg-secondary
-                rounded w-full 
-                justify-start 
-                border-2 
-                border-primary
-                mt-[12px]
-                items-center
-                gap-4 inline-flex  focus:bg-secondary hover:bg-secondary hover:border-primary"
-                type="text"
-                readOnly
-              />
-            </div>
-            {/* <div className="flex-1">
+                  type="text"
+                  readOnly
+                />
+              </div>
+              {/* <div className="flex-1">
               <label
                 htmlFor=""
                 className="text-white  text-[18px] font-medium mb-[12px]"
@@ -147,11 +142,12 @@ const ProfileInformation = () => {
                
               />
             </div> */}
+            </div>
           </div>
         </div>
-      </div>
-        </div>
-    );
-}
+      </LoaderWraperComp>
+    </div>
+  );
+};
 
 export default ProfileInformation;

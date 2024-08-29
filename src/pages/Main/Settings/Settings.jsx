@@ -1,21 +1,19 @@
 import { Button, Form, Input, Modal, Switch } from "antd";
 import logo from "../../../assets/dashboard-logo.png";
-import {
-  IconChevronLeft,
-  IconChevronRight,
-  IconLock,
-  IconMail,
-} from "@tabler/icons-react";
+import { IconLock } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import OTPInput from "react-otp-input";
 import { GoArrowLeft } from "react-icons/go";
-// import baseURL from "../../../config";
-// import Swal from "sweetalert2";
 import { HiOutlineMailOpen } from "react-icons/hi";
-// import baseURL from "../../../config";
 import Swal from "sweetalert2";
+import {
+  useChangePasswordMutation,
+  useForgotPasswordMutation,
+  useVerifyEmailMutation,
+} from "../../../redux/features/Auth/authApi";
+import { useSelector } from "react-redux";
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -24,20 +22,12 @@ const Settings = () => {
   const [otp, setOtp] = useState("");
   const [email, setEmail] = useState("");
   const [form] = Form.useForm();
-  const onChange = (checked) => {
-    console.log(`switch to ${checked}`);
-  };
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user-update"));
-    setEmail(user?.email);
-  }, []);
+  const [mutation] = useChangePasswordMutation();
+  const [forgotPassword] = useForgotPasswordMutation();
+  const [VerifyOtp, { isLoading }] = useVerifyEmailMutation();
+  const { user } = useSelector((state) => state.auth);
 
   const settingsItem = [
-    // {
-    //   title: "Notification",
-    //   path: "notification",
-    // },
     {
       title: "Change password",
       path: "change-password",
@@ -58,17 +48,7 @@ const Settings = () => {
   ];
 
   const handleNavigate = (value) => {
-    if (value === "notification") {
-      return;
-    }
-    // else if (value === "hidden-fee") {
-    //   return;
-    // }
-    // else if (value === "hidden-fee-percentage") {
-    //   setModelTitle("Set hidden fee percentage");
-    //   setIsModalOpen(true);
-    // }
-    else if (value === "change-password") {
+    if (value === "change-password") {
       setModelTitle("Change password");
       setIsModalOpen(true);
     } else {
@@ -79,125 +59,111 @@ const Settings = () => {
   const handleChangePassword = async (values) => {
     const { newPassword, oldPassword } = values;
     try {
-      const response = await baseURL.post(
-        `/user/change-password`,
-        { oldPassword, newPassword },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            authentication: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      console.log(response);
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Try Again...",
-        text: error?.response?.data?.message,
-        footer: '<a href="#">Why do I have this issue?</a>',
-      });
-    }
-    console.log(values);
-  };
-
-  const handleVerifyOtp = async (e) => {
-    e.preventDefault();
-    //   try {
-    //     const response = await baseURL.post(`/user/verify-code`, {
-    //       email: email,
-    //       code: otp,
-    //     },
-    //     {
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //         authentication: `Bearer ${localStorage.getItem("token")}`,
-    //       }
-    //     }
-
-    //   );
-
-    //     console.log(response.data);
-    //     const token = response?.data?.data?.token;
-    //     console.log(token);
-    //     if (response.data.statusCode == 200) {
-    //       localStorage.setItem("token", token);
-    //       localStorage.setItem("user", response?.data?.data?.attributes?.user);
-    //       Swal.fire({
-    //         position: "top-center",
-    //         icon: "success",
-    //         title: response.data.message,
-    //         showConfirmButton: false,
-    //         timer: 1500,
-    //       });
-    //       // navigate(`/set_new_password/${email}`);
-    //       setModelTitle("Reset Password");
-    //     }
-    //   } catch (error) {
-    //     console.log("Registration Fail", error?.response?.data?.message);
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "Error...",
-    //       text: error?.response?.data?.message,
-    //       footer: '<a href="#">Why do I have this issue?</a>',
-    //     });
-    //   }
-    setModelTitle("Reset Password");
-  };
-
-  const handleResetPassword = async (values) => {
-    console.log(values, email);
-    const data = { email: email, password: values?.password };
-    console.log(data);
-    try {
-      const response = await baseURL.post(`/user/set-password`, data, {
-        headers: {
-          "Content-Type": "application/json",
-          authentication: `Bearer ${localStorage.getItem("token")}`,
+      const response = await mutation({
+        id: user.id,
+        body: {
+          oldPassword: oldPassword,
+          newPassword: newPassword,
         },
       });
-
-      console.log(response.data);
-      if (response.data.statusCode == 200) {
+      if (response?.data?.statusCode == 200) {
+        localStorage.setItem("token", response?.data?.data?.token);
+        if (setModelTitle === "Change password") {
+          setIsModalOpen(false);
+          setModelTitle("");
+          form.resetFields(null);
+        } else {
+          navigate("/auth");
+          form.resetFields(null);
+        }
+        // Swal.fire({
+        //   position: "top-center",
+        //   icon: "success",
+        //   title: response?.data?.message,
+        //   showConfirmButton: false,
+        //   timer: 1500,
+        // });
+      } else {
         Swal.fire({
-          position: "top-center",
-          icon: "success",
-          title: response.data.message,
-          showConfirmButton: false,
-          timer: 1500,
+          icon: "error",
+          title: "Faild!",
+          text:
+            response?.data?.message ||
+            response?.error?.data?.message ||
+            "Something went wrong. Please try again later.",
         });
-        setIsModalOpen(false);
       }
     } catch (error) {
-      console.log("Registration Fail", error?.response?.data?.message);
       Swal.fire({
         icon: "error",
-        title: "Error...",
-        text: error?.response?.data?.message,
-        footer: '<a href="#">Why do I have this issue?</a>',
+        // title: "Login Failed , Try Again...",
+        text: "Something went wrong. Please try again later.",
       });
     }
   };
-
   const handleForgetPassword = async (values) => {
-    console.log(values);
     try {
-      const response = await baseURL.post(`/user/forgot-password`, values, {
-        headers: {
-          "Content-Type": "application/json",
-          authentication: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      console.log(response);
+      const response = await forgotPassword(values);
+      // console.log(response);
+      if (response?.data?.statusCode == 200) {
+        setModelTitle("Verify OTP");
+        // Swal.fire({
+        //   position: "top-center",
+        //   icon: "success",
+        //   title: response?.data?.message,
+        //   showConfirmButton: false,
+        //   timer: 1500,
+        // });
+      } else {
+        Swal.fire({
+          icon: "error",
+          text:
+            response?.data?.message ||
+            response?.error?.data?.message ||
+            "Something went wrong. Please try again later.",
+        });
+      }
     } catch (error) {
       Swal.fire({
         icon: "error",
-        title: "Try Again...",
-        text: error?.response?.data?.message,
-        footer: '<a href="#">Why do I have this issue?</a>',
+        // title: "Login Failed , Try Again...",
+        text: "Something went wrong. Please try again later.",
       });
     }
-    setModelTitle("Verify OTP");
+  };
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    if (otp.length < 4) {
+      return Swal.fire({
+        icon: "error",
+        title: "Faild",
+        text: "Please enter your OTP!.",
+      });
+    }
+    try {
+      const response = await VerifyOtp({
+        userId: user.id,
+        code: otp,
+      });
+      if (response?.data?.statusCode == 200) {
+        localStorage.setItem("token", response?.data?.data?.token);
+        setModelTitle("Reset Password");
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Faild!",
+          text:
+            response?.data?.message ||
+            response?.error?.data?.message ||
+            "Something went wrong. Please try again later.",
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        text: "Something went wrong. Please try again later.",
+      });
+    }
   };
 
   return (
@@ -229,16 +195,7 @@ const Settings = () => {
             onClick={() => setIsModalOpen(false)}
             className="flex bg-secondary justify-between items-center cursor-pointer text-black px-[60px] pt-[20px]"
           >
-            {/* <div style={{fontFamily:'Aldrich'}} className="flex justify-center items-center gap-2 flex-col border-b border-b-gray-300">
-          <img className="w-[140px] h-[140px] rounded-full" src={user?.img} alt="" />
-          <p className="text-white text-[16px] mb-[16px]">{user?.name}</p>
-        </div> */}
             <div className="object-contain">
-              {/* <img
-                className="flex justify-center items-center"
-                src={logo}
-                alt=""
-              /> */}
               <div className="flex items-center justify-start gap-2">
                 <Link to="/settings">
                   {" "}
@@ -278,7 +235,7 @@ const Settings = () => {
                 rules={[
                   {
                     required: true,
-                    message: "Please Input Your Password!",
+                    message: "Please Input Your old Password!",
                   },
                 ]}
               >
@@ -289,7 +246,7 @@ const Settings = () => {
                   name="oldPassword"
                   prefix={
                     <IconLock
-                       className="mr-2 border-2 border-primary rounded-full p-[6px]"
+                      className="mr-2 border-2 border-primary rounded-full p-[6px]"
                       size={28}
                       color="#193664"
                     />
@@ -309,6 +266,7 @@ const Settings = () => {
                 rules={[
                   {
                     required: true,
+                    message: "Please Input your new Password!",
                   },
                 ]}
               >
@@ -324,7 +282,7 @@ const Settings = () => {
                       color="#193664"
                     />
                   }
-                 className="p-4 bg-secondary
+                  className="p-4 bg-secondary
                     rounded w-full 
                     border-2 border-primary
                     justify-start 
@@ -341,6 +299,7 @@ const Settings = () => {
                 rules={[
                   {
                     required: true,
+                    message: "Please Re-Enter New Password!",
                   },
                   ({ getFieldValue }) => ({
                     validator(_, value) {
@@ -362,7 +321,7 @@ const Settings = () => {
                   name="re_enter_password"
                   prefix={
                     <IconLock
-                        className="mr-2 border-2 border-primary rounded-full p-[6px]"
+                      className="mr-2 border-2 border-primary rounded-full p-[6px]"
                       size={28}
                       color="#193664"
                     />
@@ -377,7 +336,7 @@ const Settings = () => {
                 />
               </Form.Item>
               <p className=" text-primary text-[14px] font-medium">
-                <button onClick={() => setModelTitle("Forget password")}>
+                <button type="button" onClick={() => setModelTitle("Forget password")}>
                   Forget Password
                 </button>
               </p>
@@ -441,13 +400,6 @@ const Settings = () => {
                 </Form.Item>
               </div>
               <Form.Item>
-                {/* <Button
-                    type="primary"
-                    htmlType="submit"
-                    className="block w-full h-[56px] px-2 py-4 mt-2 text-white bg-[#FA1131] rounded-lg"
-                  >
-                    Send OTP
-                  </Button> */}
                 <Button
                   style={{
                     backgroundColor: "#57B660",
@@ -471,27 +423,25 @@ const Settings = () => {
               <p className="text-[16px] mb-[14px]">
                 Please enter your email address to recover your account.
               </p>
-              <div className="">
+              <div className="my-5">
                 <OTPInput
                   value={otp}
                   onChange={setOtp}
-                  numInputs={6}
+                  numInputs={4}
                   inputStyle={{
-                    height: "50px",
-                    background: "transparent",
-                    width: "50px",
-                    border: "1px solid #193664",
+                    height: "60px",
+                    width: "60px",
+                    background: "#CBE8CE",
+                    border: "3px solid #57B660",
                     marginRight: "20px",
+                    marginLeft: "20px",
                     outline: "none",
+                    color: "black",
+                    borderRadius: "4px",
                   }}
                   renderInput={(props) => <input {...props} />}
                 />
-                <p className="flex items-center justify-between mt-2 mb-6">
-                  Didn’t receive code?
-                  <button className="font-medium text-">Resend</button>
-                </p>
               </div>
-
               <button
                 type="submit"
                 style={{
@@ -521,49 +471,51 @@ const Settings = () => {
               }}
               layout="vertical"
               className="space-y-4 fit-content object-contain"
-              onFinish={handleResetPassword}
+              onFinish={handleChangePassword}
             >
               <Form.Item
-                name="enter_password"
+                name="newPassword"
                 rules={[
                   {
                     required: true,
+                    message: "Please Input your new Password!",
                   },
                 ]}
               >
                 <Input.Password
                   size="large"
                   // onChange={handleChange}
-                  placeholder="Set your password"
-                  name="set_password"
+                  placeholder="Set Your New Password"
+                  name="newPassword"
                   prefix={
                     <IconLock
-                      className="mr-2 bg-white rounded-full p-[6px]"
+                      className="mr-2 border-2 border-primary rounded-full p-[6px]"
                       size={28}
                       color="#193664"
                     />
                   }
                   className="p-4 bg-secondary
-
-                      rounded w-full 
-                      justify-start 
-                      mt-[12px]
-                      focus:bg-secondary
-                       outline-none  border-primary hover:bg-secondary hover:border-primary"
+                    rounded w-full 
+                    border-2 border-primary
+                    justify-start 
+                    mt-[12px]
+                    outline-none
+                   focus:border-none focus:bg-secondary hover:bg-secondary hover:border-primary"
                 />
               </Form.Item>
 
               {/* Field */}
               <Form.Item
-                name="password"
-                dependencies={["password"]}
+                name="reenterPassword"
+                dependencies={["newPassword"]}
                 rules={[
                   {
                     required: true,
+                    message: "Please Re-Enter New Password!",
                   },
                   ({ getFieldValue }) => ({
                     validator(_, value) {
-                      if (!value || getFieldValue("enter_password") === value) {
+                      if (!value || getFieldValue("newPassword") === value) {
                         return Promise.resolve();
                       }
                       return Promise.reject(
@@ -581,25 +533,24 @@ const Settings = () => {
                   name="re_enter_password"
                   prefix={
                     <IconLock
-                      className="mr-2 bg-white rounded-full p-[6px]"
+                      className="mr-2 border-2 border-primary rounded-full p-[6px]"
                       size={28}
                       color="#193664"
                     />
                   }
                   className="p-4 bg-secondary
-
                   rounded w-full 
+                  border-2 border-primary
                   justify-start 
                   mt-[12px]
-                  focus:bg-secondary
-                   outline-none  border-primary hover:bg-secondary hover:border-primary"
-                  //   bordered={false}
+                  outline-none
+                  focus:border-none focus:bg-secondary hover:bg-secondary hover:border-primary"
                 />
               </Form.Item>
               <Form.Item>
                 <Button
                   style={{
-                    backgroundColor:"#57B660",
+                    backgroundColor: "#57B660",
                     color: "#fff",
                     size: "18px",
                     height: "56px",

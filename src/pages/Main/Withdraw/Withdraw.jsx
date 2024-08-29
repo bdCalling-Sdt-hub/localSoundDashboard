@@ -1,144 +1,40 @@
 import React from "react";
-import { ConfigProvider, DatePicker, Modal, Space, Table } from "antd";
-import { Link } from "react-router-dom";
+import { Button, ConfigProvider, DatePicker, Modal, Space, Table } from "antd";
 import { BsInfoCircle } from "react-icons/bs";
-import { RxCross2 } from "react-icons/rx";
 import { useState } from "react";
+import {
+  useGetAllWithdrawRequestQuery,
+  useUpdateWithdrawStatusMutation,
+} from "../../../redux/features/Withdraw/withdraw.api";
+import LoaderWraperComp from "../../../Components/LoaderWraperComp";
+import Swal from "sweetalert2";
 
 const Withdraw = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [user, setUser] = useState();
-
-  const dataSource = [
-    {
-      key: "1",
-      email: "ahad.aiman@gmail.com",
-      doctorName: "Ahad Hossain",
-      bankName: "Brac Bank",
-      type: "Savings",
-      accountNumber: "123456789",
-      amount: "5000",
-      status: "Pending",
-      date: "2022-12-12",
-    },
-    {
-      key: "2",
-      email: "ahad.aiman@gmail.com",
-      doctorName: "Ahad Hossain",
-      bankName: "Brac Bank",
-      type: "Savings",
-      accountNumber: "123456789",
-      amount: "5000",
-      status: "Pending",
-      date: "2022-12-12",
-    },
-    {
-      key: "3",
-      email: "ahad.aiman@gmail.com",
-      doctorName: "Ahad Hossain",
-      bankName: "Brac Bank",
-      type: "Savings",
-      accountNumber: "123456789",
-      amount: "5000",
-      status: "Pending",
-      date: "2022-12-12",
-    },
-    {
-      key: "4",
-      email: "ahad.aiman@gmail.com",
-      doctorName: "Ahad Hossain",
-      bankName: "Brac Bank",
-      type: "Savings",
-      accountNumber: "123456789",
-      amount: "5000",
-      status: "Pending",
-      date: "2022-12-12",
-    },
-    {
-      key: "5",
-      email: "ahad.aiman@gmail.com",
-      doctorName: "Ahad Hossain",
-      bankName: "Brac Bank",
-      type: "Savings",
-      accountNumber: "123456789",
-      amount: "5000",
-      status: "Pending",
-      date: "2022-12-12",
-    },
-    {
-      key: "6",
-      email: "ahad.aiman@gmail.com",
-      doctorName: "Ahad Hossain",
-      bankName: "Brac Bank",
-      type: "Savings",
-      accountNumber: "123456789",
-      amount: "5000",
-      status: "Pending",
-      date: "2022-12-12",
-    },
-    {
-      key: "7",
-      email: "ahad.aiman@gmail.com",
-      doctorName: "Ahad Hossain",
-      bankName: "Brac Bank",
-      type: "Savings",
-      accountNumber: "123456789",
-      amount: "5000",
-      status: "Pending",
-      date: "2022-12-12",
-    },
-    {
-      key: "8",
-      email: "ahad.aiman@gmail.com",
-      doctorName: "Ahad Hossain",
-      bankName: "Brac Bank",
-      type: "Savings",
-      accountNumber: "123456789",
-      amount: "5000",
-      status: "Pending",
-      date: "2022-12-12",
-    },
-    {
-      key: "9",
-      email: "ahad.aiman@gmail.com",
-      doctorName: "Ahad Hossain",
-      bankName: "Brac Bank",
-      type: "Savings",
-      accountNumber: "123456789",
-      amount: "5000",
-      status: "Pending",
-      date: "2022-12-12",
-    },
-    {
-      key: "10",
-      email: "ahad.aiman@gmail.com",
-      doctorName: "Ahad Hossain",
-      bankName: "Brac Bank",
-      type: "Savings",
-      accountNumber: "123456789",
-      amount: "5000",
-      status: "Pending",
-      date: "2022-12-12",
-    },
-  ];
+  const [modalData, setModalData] = useState();
+  const { data, isLoading, isError } = useGetAllWithdrawRequestQuery(undefined);
+  const [updateStatus] = useUpdateWithdrawStatusMutation();
 
   const handleView = (record) => {
-    setUser(record);
-    setIsModalOpen(true);
+    setModalData(record);
+    setIsModalOpen((c) => !c);
   };
 
   const columns = [
     {
       title: "#SI",
-      dataIndex: "",
-      key: "",
+      dataIndex: "id",
+      key: "id",
       render: (text, _, index) => (currentPage - 1) * 10 + index + 1,
     },
     {
-      title: "Artist Name",
-      dataIndex: "doctorName",
-      key: " doctorName",
+      title: "User Name",
+      dataIndex: "name",
+      key: "name",
+      render: (_, record, icndx) => (
+        <p key={icndx}>{record?.user?.name || "N/A"}</p>
+      ),
     },
     {
       title: "Bank Name",
@@ -147,18 +43,18 @@ const Withdraw = () => {
     },
     {
       title: "A/C Type",
-      dataIndex: "type",
-      key: "phoneNumber",
+      dataIndex: "accountType",
+      key: "accountType",
     },
     {
       title: "A/C Number",
-      dataIndex: "accountNumber",
-      key: "date",
+      dataIndex: "accountNo",
+      key: "accountNo",
     },
     {
       title: "Withdraw Amount",
       dataIndex: "amount",
-      key: "date",
+      key: "amount",
     },
     {
       title: "Status",
@@ -167,6 +63,7 @@ const Withdraw = () => {
     },
     {
       title: "Action",
+      dataIndex: "action",
       key: "action",
       render: (_, record) => (
         <Space size="middle">
@@ -175,13 +72,45 @@ const Withdraw = () => {
             size={18}
             className="text-primary cursor-pointer"
           />
-
-          {/* <a><RxCross2 size={18} className='text-[red]'/></a> */}
         </Space>
       ),
     },
   ];
-
+  const handleStatus = async (status) => {
+    try {
+      const res = await updateStatus({
+        id: modalData?.id,
+        body: {
+          status: status,
+        },
+      });
+      console.log(res);
+      handleView({});
+      if (res?.data?.status == "success") {
+        Swal.fire({
+          position: "top-center",
+          icon: "success",
+          title: res?.data?.message || "Successful!!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error...",
+          text: res?.error?.data?.message || "Something went wrong!!",
+          footer: '<a href="#">Why do I have this issue?</a>',
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error...",
+        text: error?.message,
+        footer: '<a href="#">Why do I have this issue?</a>',
+      });
+    }
+  };
   return (
     <div>
       <div className="flex justify-between items-center">
@@ -192,42 +121,44 @@ const Withdraw = () => {
               suffixIcon
             /> */}
       </div>
-      <div className="bg-secondary w-full  border-2 rounded-t-lg mt-[24px]">
-        <div className="flex py-[22px] mx-[20px] justify-between items-center">
-          <p className=" test-[24px] font-bold">Withdraw Request List</p>
-        </div>
-        <ConfigProvider
-          theme={{
-            components: {
-              Table: {
-                headerBg: "#57B660",
-                headerColor: "white",
-                headerBorderRadius: 2,
-                colorBgContainer: "#CBE8CE40",
+      <LoaderWraperComp isError={isError} isLoading={isLoading}>
+        <div className="bg-secondary w-full  border-2 rounded-t-lg mt-[24px] ">
+          <div className="flex py-[22px] mx-[20px] justify-between items-center">
+            <p className=" test-[24px] font-bold">Withdraw Request List</p>
+          </div>
+          <ConfigProvider
+            theme={{
+              components: {
+                Table: {
+                  headerBg: "#57B660",
+                  headerColor: "white",
+                  headerBorderRadius: 2,
+                  colorBgContainer: "#CBE8CE40",
+                },
               },
-            },
-          }}
-        >
-          <Table
-            pagination={{
-              position: ["bottomCenter"],
-              current: currentPage,
-              // pageSize:10,
-              // total:usersAll?.pagination?.Users,
-              // showSizeChanger: false,
-              //   onChange: handleChangePage,
             }}
-            // pagination={false}
-            columns={columns}
-            // dataSource={usersAll?.data?.attributes}
-            dataSource={dataSource}
-          />
-        </ConfigProvider>
-      </div>
+          >
+            <Table
+              pagination={{
+                position: ["bottomCenter"],
+                current: currentPage,
+                // pageSize:10,
+                // total:usersAll?.pagination?.Users,
+                // showSizeChanger: false,
+                //   onChange: handleChangePage,
+              }}
+              // pagination={false}
+              columns={columns}
+              dataSource={data?.data}
+              // dataSource={dataSource}
+            />
+          </ConfigProvider>
+        </div>
+      </LoaderWraperComp>
       <Modal
         open={isModalOpen}
         onOk={() => setIsModalOpen(false)}
-        onCancel={() => setIsModalOpen(false)}
+        onCancel={() => handleView({})}
         footer={[]}
         closeIcon
       >
@@ -239,33 +170,57 @@ const Withdraw = () => {
           </div>
           <div className="p-[20px] ">
             <div className="flex justify-between border-b py-[16px]">
-              <p>Artist Name: </p>
-              <p>{user?.doctorName ? user?.doctorName : "N/A"}</p>
+              <p>User Name: </p>
+              <p>{modalData?.user ? modalData.user.name : "N/A"}</p>
             </div>
             <div className="flex justify-between border-b py-[16px]">
               <p>Bank Name:</p>
-              <p>{user?.bankName ? user?.bankName : "N/A"}</p>
-            </div>
-            <div className="flex justify-between border-b py-[16px] ">
-              <p>A/C type:</p>
-              <p>{user?.type ? user?.type : "N/A"}</p>
-            </div>
-            <div className="flex justify-between border-b py-[16px] ">
-              <p>A/C Number:</p>
-              <p>{user?.accountNumber ? user?.accountNumber : "N/A"}</p>
+              <p>{modalData?.bankName ? modalData?.bankName : "N/A"}</p>
             </div>
             <div className="flex justify-between border-b py-[16px]">
               <p>Withdraw Amount :</p>
-              <p>{user?.amount ? user?.amount : "N/A"}</p>
+              <p>${modalData?.amount ? modalData?.amount : "N/A"}</p>
             </div>
-            <div className="flex justify-center gap-4 items-center pt-[16px]">
-              <p className="px-[35px] cursor-pointer py-[10px] bg-white border-2 border-primary text-primary rounded-lg font-medium">
-                Cancel
+            <div className="flex justify-between border-b py-[16px]">
+              <p>Withdraw Status :</p>
+              <p className="font-medium">
+                {modalData?.status ? modalData?.status : "N/A"}
               </p>
-              <p className="px-[55px] cursor-pointer py-[10px] bg-primary text-white rounded-lg">
-                {/* Regular P550 */}
-                Approve
-              </p>
+            </div>
+            <div className="flex justify-between border-b py-[16px] ">
+              <p>A/C type:</p>
+              <p>{modalData?.accountType ? modalData?.accountType : "N/A"}</p>
+            </div>
+            <div className="flex justify-between border-b py-[16px] ">
+              <p>A/C Number:</p>
+              <p>{modalData?.accountNo ? modalData?.accountNo : "N/A"}</p>
+            </div>
+            <div className="flex justify-center items-center gap-4 py-[16px]">
+              {modalData?.status === "PENDING" ? (
+                <>
+                  <Button
+                    onClick={() => handleStatus("REJECTED")}
+                    style={{ background: "#ffffff", color: "black" }}
+                    size="large"
+                    type="primary"
+                    className="px-[60px]"
+                  >
+                    Reject 
+                  </Button>
+                  <Button
+                    onClick={() => handleStatus("APPROVED")}
+                    type="primary"
+                    size="large"
+                    className="px-[55px] cursor-pointer bg-primary text-white rounded-lg"
+                  >
+                    Approve
+                  </Button>
+                </>
+              ) : (
+                <h5 className="text-lg text-red-400 mt-2">
+                  You can't change the status again!!
+                </h5>
+              )}
             </div>
           </div>
         </div>
