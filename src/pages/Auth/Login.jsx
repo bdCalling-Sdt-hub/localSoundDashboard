@@ -14,7 +14,8 @@ const Login = () => {
   const navigate = useNavigate();
   const [setData, { isLoading }] = usePostLoginMutation();
   const dispatch = useDispatch();
-
+  const from = location.state?.from?.pathname || "/";
+  // console.log(location.state);
   const onFinish = async (value) => {
     try {
       const response = await setData(value);
@@ -39,18 +40,18 @@ const Login = () => {
             showConfirmButton: false,
             timer: 1500,
           });
-          navigate("/");
+          navigate(from, { replace: true });
         } else {
           Swal.fire({
             icon: "error",
-            title: "Login Failed , Invalid user...",
+            title: "Login Failed!!",
             text: "You are not a Admin",
           });
         }
       } else {
         Swal.fire({
           icon: "error",
-          title: "Login Failed , Try Again...",
+          title: response?.error?.data?.message || "Login Failed!!",
           text: "Something went wrong. Please try again later.",
         });
       }
@@ -154,8 +155,7 @@ const Login = () => {
               />
             </Form.Item>
             <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2">
-              </div>
+              <div className="flex items-center gap-2"></div>
               <div>
                 <Link
                   to="/auth/forgot-password"
