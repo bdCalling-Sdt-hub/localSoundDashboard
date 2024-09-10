@@ -33,8 +33,9 @@ const ProfileInformation = () => {
       <LoaderWraperComp isError={isError} isLoading={isLoading}>
         <div className="lg:flex ml-[14px] p-[36px] rounded-xl gap-5">
           <div className="w-[33%] bg-secondary rounded-xl ml-[24px] flex flex-col justify-center items-center gap-[30px] p-10">
+            <div className="w-[242px] h-[242px] overflow-hidden rounded-full">
             <img
-              className="w-[242px] h-[242px] rounded-full"
+              className="rounded-full w-full h-full object-cover"
               src={
                 data?.data?.image
                   ? `${import.meta.env.VITE_SERVER_URL}/${data?.data?.image}`
@@ -42,6 +43,7 @@ const ProfileInformation = () => {
               }
               alt=""
             />
+            </div>
             <div className="flex flex-col justify-center items-center">
               <p className="text-[20px] ">
                 {data?.data?.type.toUpperCase() || "Admin"}

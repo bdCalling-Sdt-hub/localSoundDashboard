@@ -138,17 +138,20 @@ const EditProfileInformation = () => {
                         setFileList(newFileList);
                       }}
                     >
-                      <img
-                        className="w-[242px] h-[242px] rounded-full flex justify-center items-center opacity-100"
-                        src={imageUrl}
-                        alt=""
-                      />
-
+                      <div className="w-[242px] h-[242px] overflow-hidden rounded-full">
+                        <img
+                          className="rounded-full w-full h-full object-cover"
+                          src={imageUrl}
+                          alt=""
+                        />
+                      </div>
                       <Button
                         type="primary"
-                        style={{backgroundColor: "#09010f49"}}
+                        style={{ backgroundColor: "#09010f49" }}
                         className="border-none text-[16px] absolute h-full w-full rounded-full flex justify-center items-center"
-                        icon={<LuImagePlus size={32} className="drop-shadow-xl"/>}
+                        icon={
+                          <LuImagePlus size={32} className="drop-shadow-xl" />
+                        }
                       >
                         Change
                       </Button>

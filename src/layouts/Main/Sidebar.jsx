@@ -32,7 +32,7 @@ const Sidebar = () => {
     });
   };
   return (
-    <div className="w-[350px] flex flex-col text-secondary justify-between bg-primary min-h-screen rounded-lg border-2 ">
+    <div className="w-[350px] flex flex-col text-secondary justify-between bg-primary min-h-[95vh] rounded-lg border-2 ">
       <div className="">
         <div className="p-[20px]">
           {/* <img className="w-[200px] mx-auto" src={logo} alt="" /> */}

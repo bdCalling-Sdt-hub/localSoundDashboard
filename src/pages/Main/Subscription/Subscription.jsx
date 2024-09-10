@@ -96,7 +96,7 @@ const Subscription = () => {
         </div>
       </div>
       <LoaderWraperComp isError={isError} isLoading={isLoading}>
-        <div className="grid grid-cols-3 gap-x-6 gap-y-12 my-4">
+        <div className="grid grid-cols-3 gap-x-8 gap-y-12 my-4">
           {data?.data?.map((item) => (
             <SubscriptionCard key={item.id} item={item} />
           ))}

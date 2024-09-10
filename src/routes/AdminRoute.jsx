@@ -25,7 +25,9 @@ const AdminRoutes = ({ children }) => {
   if (user?.type === "ADMIN") {
     return children;
   }
-  return <Navigate to="/auth" state={{ from: location }} replace />;
+  //   return <Navigate to="/auth" state={{ from: location }} replace />;
+  // };
+  return <Navigate state={location.pathname} to="/auth" />;
 };
 
 export default AdminRoutes;

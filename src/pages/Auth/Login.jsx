@@ -1,7 +1,7 @@
 import { Button, Checkbox, Form, Input } from "antd";
 
 import { HiOutlineMailOpen } from "react-icons/hi";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 // import logo from "../../assets/appoinment-logo.jpg";
 import Swal from "sweetalert2";
 import { IconLock } from "@tabler/icons-react";
@@ -14,7 +14,8 @@ const Login = () => {
   const navigate = useNavigate();
   const [setData, { isLoading }] = usePostLoginMutation();
   const dispatch = useDispatch();
-  const from = location.state?.from?.pathname || "/";
+  const location = useLocation();
+  // const from = location.state?.from?.pathname || "/";
   // console.log(location.state);
   const onFinish = async (value) => {
     try {
@@ -40,7 +41,8 @@ const Login = () => {
             showConfirmButton: false,
             timer: 1500,
           });
-          navigate(from, { replace: true });
+          // navigate(from, { replace: true });
+          navigate(location.state ? location.state : "/");
         } else {
           Swal.fire({
             icon: "error",
