@@ -18,7 +18,7 @@ const BarChartIncomeRatio = () => {
     return <h1 className="text-center my-5">Loading....</h1>;
   }
   if (isError) {
-    return <h1>Something want wrong!</h1>;
+    return <h1 className="text-center">Something want wrong!</h1>;
   }
   // const chart = [
   //     {

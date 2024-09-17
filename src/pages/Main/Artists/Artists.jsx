@@ -1,9 +1,7 @@
 import { ConfigProvider, DatePicker, Modal, Space, Table } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { BsInfoCircle } from "react-icons/bs";
-import { RxCross2 } from "react-icons/rx";
 import { useState } from "react";
-import { GiLoveSong } from "react-icons/gi";
 import { useGetAllUserQuery } from "../../../redux/features/Users/userApi";
 
 const Artists = () => {
@@ -13,129 +11,131 @@ const Artists = () => {
   const navigate = useNavigate();
   const { data, isLoading, isError } = useGetAllUserQuery([
     { name: "type", value: "ARTIST" },
+    { name: "page", value: currentPage },
+    { name: "limit", value: "15" },
   ]);
-  const dataSource = [
-    {
-      key: "1",
-      email: "ahad.aiman@gmail.com",
-      name: "Ahad",
-      phoneNumber: "0123456787",
-      age: 32,
-      address: "2715 Ash Dr. San Jose, South Dakota 83475",
-      date: "2022-12-12",
-      specializedIn: "Cardiologist",
-      experience: "5 years",
-      clinicAddress: "2715 Ash Dr. San Jose, South Dakota 83475",
-    },
-    {
-      key: "2",
-      email: "ahad.aiman@gmail.com",
-      name: "Ahad",
-      phoneNumber: "0123456787",
-      age: 32,
-      address: "2715 Ash Dr. San Jose, South Dakota 83475",
-      date: "2022-12-12",
-      specializedIn: "Cardiologist",
-      experience: "5 years",
-      clinicAddress: "2715 Ash Dr. San Jose, South Dakota 83475",
-    },
-    {
-      key: "3",
-      email: "ahad.aiman@gmail.com",
-      name: "Ahad",
-      phoneNumber: "0123456787",
-      age: 32,
-      address: "2715 Ash Dr. San Jose, South Dakota 83475",
-      date: "2022-12-12",
-      specializedIn: "Cardiologist",
-      experience: "5 years",
-      clinicAddress: "2715 Ash Dr. San Jose, South Dakota 83475",
-    },
-    {
-      key: "4",
-      email: "ahad.aiman@gmail.com",
-      name: "Ahad",
-      phoneNumber: "0123456787",
-      age: 32,
-      address: "2715 Ash Dr. San Jose, South Dakota 83475",
-      date: "2022-12-12",
-      specializedIn: "Cardiologist",
-      experience: "5 years",
-      clinicAddress: "2715 Ash Dr. San Jose, South Dakota 83475",
-    },
-    {
-      key: "5",
-      email: "ahad.aiman@gmail.com",
-      name: "Ahad",
-      phoneNumber: "0123456787",
-      age: 32,
-      address: "2715 Ash Dr. San Jose, South Dakota 83475",
-      date: "2022-12-12",
-      specializedIn: "Cardiologist",
-      experience: "5 years",
-      clinicAddress: "2715 Ash Dr. San Jose, South Dakota 83475",
-    },
-    {
-      key: "6",
-      email: "ahad.aiman@gmail.com",
-      name: "Ahad",
-      phoneNumber: "0123456787",
-      age: 32,
-      address: "2715 Ash Dr. San Jose, South Dakota 83475",
-      date: "2022-12-12",
-      specializedIn: "Cardiologist",
-      experience: "5 years",
-      clinicAddress: "2715 Ash Dr. San Jose, South Dakota 83475",
-    },
-    {
-      key: "7",
-      email: "ahad.aiman@gmail.com",
-      name: "Ahad",
-      phoneNumber: "0123456787",
-      age: 32,
-      address: "2715 Ash Dr. San Jose, South Dakota 83475",
-      date: "2022-12-12",
-      specializedIn: "Cardiologist",
-      experience: "5 years",
-      clinicAddress: "2715 Ash Dr. San Jose, South Dakota 83475",
-    },
-    {
-      key: "8",
-      email: "ahad.aiman@gmail.com",
-      name: "Ahad",
-      phoneNumber: "0123456787",
-      age: 32,
-      address: "2715 Ash Dr. San Jose, South Dakota 83475",
-      date: "2022-12-12",
-      specializedIn: "Cardiologist",
-      experience: "5 years",
-      clinicAddress: "2715 Ash Dr. San Jose, South Dakota 83475",
-    },
-    {
-      key: "9",
-      email: "ahad.aiman@gmail.com",
-      name: "Ahad",
-      phoneNumber: "0123456787",
-      age: 32,
-      address: "2715 Ash Dr. San Jose, South Dakota 83475",
-      date: "2022-12-12",
-      specializedIn: "Cardiologist",
-      experience: "5 years",
-      clinicAddress: "2715 Ash Dr. San Jose, South Dakota 83475",
-    },
-    {
-      key: "10",
-      email: "ahad.aiman@gmail.com",
-      name: "Ahad",
-      phoneNumber: "0123456787",
-      age: 32,
-      address: "2715 Ash Dr. San Jose, South Dakota 83475",
-      date: "2022-12-12",
-      specializedIn: "Cardiologist",
-      experience: "5 years",
-      clinicAddress: "2715 Ash Dr. San Jose, South Dakota 83475",
-    },
-  ];
+  // const dataSource = [
+  //   {
+  //     key: "1",
+  //     email: "ahad.aiman@gmail.com",
+  //     name: "Ahad",
+  //     phoneNumber: "0123456787",
+  //     age: 32,
+  //     address: "2715 Ash Dr. San Jose, South Dakota 83475",
+  //     date: "2022-12-12",
+  //     specializedIn: "Cardiologist",
+  //     experience: "5 years",
+  //     clinicAddress: "2715 Ash Dr. San Jose, South Dakota 83475",
+  //   },
+  //   {
+  //     key: "2",
+  //     email: "ahad.aiman@gmail.com",
+  //     name: "Ahad",
+  //     phoneNumber: "0123456787",
+  //     age: 32,
+  //     address: "2715 Ash Dr. San Jose, South Dakota 83475",
+  //     date: "2022-12-12",
+  //     specializedIn: "Cardiologist",
+  //     experience: "5 years",
+  //     clinicAddress: "2715 Ash Dr. San Jose, South Dakota 83475",
+  //   },
+  //   {
+  //     key: "3",
+  //     email: "ahad.aiman@gmail.com",
+  //     name: "Ahad",
+  //     phoneNumber: "0123456787",
+  //     age: 32,
+  //     address: "2715 Ash Dr. San Jose, South Dakota 83475",
+  //     date: "2022-12-12",
+  //     specializedIn: "Cardiologist",
+  //     experience: "5 years",
+  //     clinicAddress: "2715 Ash Dr. San Jose, South Dakota 83475",
+  //   },
+  //   {
+  //     key: "4",
+  //     email: "ahad.aiman@gmail.com",
+  //     name: "Ahad",
+  //     phoneNumber: "0123456787",
+  //     age: 32,
+  //     address: "2715 Ash Dr. San Jose, South Dakota 83475",
+  //     date: "2022-12-12",
+  //     specializedIn: "Cardiologist",
+  //     experience: "5 years",
+  //     clinicAddress: "2715 Ash Dr. San Jose, South Dakota 83475",
+  //   },
+  //   {
+  //     key: "5",
+  //     email: "ahad.aiman@gmail.com",
+  //     name: "Ahad",
+  //     phoneNumber: "0123456787",
+  //     age: 32,
+  //     address: "2715 Ash Dr. San Jose, South Dakota 83475",
+  //     date: "2022-12-12",
+  //     specializedIn: "Cardiologist",
+  //     experience: "5 years",
+  //     clinicAddress: "2715 Ash Dr. San Jose, South Dakota 83475",
+  //   },
+  //   {
+  //     key: "6",
+  //     email: "ahad.aiman@gmail.com",
+  //     name: "Ahad",
+  //     phoneNumber: "0123456787",
+  //     age: 32,
+  //     address: "2715 Ash Dr. San Jose, South Dakota 83475",
+  //     date: "2022-12-12",
+  //     specializedIn: "Cardiologist",
+  //     experience: "5 years",
+  //     clinicAddress: "2715 Ash Dr. San Jose, South Dakota 83475",
+  //   },
+  //   {
+  //     key: "7",
+  //     email: "ahad.aiman@gmail.com",
+  //     name: "Ahad",
+  //     phoneNumber: "0123456787",
+  //     age: 32,
+  //     address: "2715 Ash Dr. San Jose, South Dakota 83475",
+  //     date: "2022-12-12",
+  //     specializedIn: "Cardiologist",
+  //     experience: "5 years",
+  //     clinicAddress: "2715 Ash Dr. San Jose, South Dakota 83475",
+  //   },
+  //   {
+  //     key: "8",
+  //     email: "ahad.aiman@gmail.com",
+  //     name: "Ahad",
+  //     phoneNumber: "0123456787",
+  //     age: 32,
+  //     address: "2715 Ash Dr. San Jose, South Dakota 83475",
+  //     date: "2022-12-12",
+  //     specializedIn: "Cardiologist",
+  //     experience: "5 years",
+  //     clinicAddress: "2715 Ash Dr. San Jose, South Dakota 83475",
+  //   },
+  //   {
+  //     key: "9",
+  //     email: "ahad.aiman@gmail.com",
+  //     name: "Ahad",
+  //     phoneNumber: "0123456787",
+  //     age: 32,
+  //     address: "2715 Ash Dr. San Jose, South Dakota 83475",
+  //     date: "2022-12-12",
+  //     specializedIn: "Cardiologist",
+  //     experience: "5 years",
+  //     clinicAddress: "2715 Ash Dr. San Jose, South Dakota 83475",
+  //   },
+  //   {
+  //     key: "10",
+  //     email: "ahad.aiman@gmail.com",
+  //     name: "Ahad",
+  //     phoneNumber: "0123456787",
+  //     age: 32,
+  //     address: "2715 Ash Dr. San Jose, South Dakota 83475",
+  //     date: "2022-12-12",
+  //     specializedIn: "Cardiologist",
+  //     experience: "5 years",
+  //     clinicAddress: "2715 Ash Dr. San Jose, South Dakota 83475",
+  //   },
+  // ];
 
   const handleView = (record) => {
     setUser(record);
@@ -147,7 +147,7 @@ const Artists = () => {
       title: "#SI",
       dataIndex: "",
       key: "",
-      render: (text, _, index) => (currentPage - 1) * 10 + index + 1,
+      render: (text, _, index) => (currentPage - 1) * 15 + index + 1,
     },
     {
       title: "Artist Name",
@@ -186,11 +186,8 @@ const Artists = () => {
       ),
     },
   ];
-  if (isLoading) {
-    return <h1 className="text-center my-5">Loading....</h1>;
-  }
   if (isError) {
-    return <h1>Something want wrong!</h1>;
+    return <h1 className="text-center">Something want wrong!</h1>;
   }
   const tableData = data?.data?.map((user, index) => ({
     key: index + 1,
@@ -226,14 +223,14 @@ const Artists = () => {
           }}
         >
           <Table
-            pagination={{
-              position: ["bottomCenter"],
-              current: currentPage,
-              // pageSize:10,
-              // total:usersAll?.pagination?.Users,
-              // showSizeChanger: false,
-              //   onChange: handleChangePage,
-            }}
+           loading={isLoading}
+           pagination={{
+             position: ["bottomCenter"],
+             current: currentPage,
+             onChange: (page) => setCurrentPage(page),
+             total: data?.pagination?.totalData,
+             pageSize: 15,
+           }}
             // pagination={false}
             columns={columns}
             // dataSource={usersAll?.data?.attributes}

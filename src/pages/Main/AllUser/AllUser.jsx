@@ -11,100 +11,11 @@ const AllUser = () => {
   const [user, setUser] = useState();
   const { data, isLoading, isError } = useGetAllUserQuery([
     { name: "type", value: "USER" },
+    { name: "page", value: currentPage },
+    { name: "limit", value: "15" },
   ]);
-  // const dataSource = [
-  //   {
-  //     key: "1",
-  //     email: "ahad.aiman@gmail.com",
-  //     name: "Ahad",
-  //     phoneNumber: "0123456787",
-  //     age: 32,
-  //     address: "2715 Ash Dr. San Jose, South Dakota 83475",
-  //     date: "2022-12-12",
-  //   },
-  //   {
-  //     key: "2",
-  //     email: "ahad.aiman@gmail.com",
-  //     name: "Ahad",
-  //     phoneNumber: "0123456787",
-  //     age: 32,
-  //     address: "2715 Ash Dr. San Jose, South Dakota 83475",
-  //     date: "2022-12-12",
-  //   },
-  //   {
-  //     key: "3",
-  //     email: "ahad.aiman@gmail.com",
-  //     name: "Ahad",
-  //     phoneNumber: "0123456787",
-  //     age: 32,
-  //     address: "2715 Ash Dr. San Jose, South Dakota 83475",
-  //     date: "2022-12-12",
-  //   },
-  //   {
-  //     key: "4",
-  //     email: "ahad.aiman@gmail.com",
-  //     name: "Ahad",
-  //     phoneNumber: "0123456787",
-  //     age: 32,
-  //     address: "2715 Ash Dr. San Jose, South Dakota 83475",
-  //     date: "2022-12-12",
-  //   },
-  //   {
-  //     key: "5",
-  //     email: "ahad.aiman@gmail.com",
-  //     name: "Ahad",
-  //     phoneNumber: "0123456787",
-  //     age: 32,
-  //     address: "2715 Ash Dr. San Jose, South Dakota 83475",
-  //     date: "2022-12-12",
-  //   },
-  //   {
-  //     key: "6",
-  //     email: "ahad.aiman@gmail.com",
-  //     name: "Ahad",
-  //     phoneNumber: "0123456787",
-  //     age: 32,
-  //     address: "2715 Ash Dr. San Jose, South Dakota 83475",
-  //     date: "2022-12-12",
-  //   },
-  //   {
-  //     key: "7",
-  //     email: "ahad.aiman@gmail.com",
-  //     name: "Ahad",
-  //     phoneNumber: "0123456787",
-  //     age: 32,
-  //     address: "2715 Ash Dr. San Jose, South Dakota 83475",
-  //     date: "2022-12-12",
-  //   },
-  //   {
-  //     key: "8",
-  //     email: "ahad.aiman@gmail.com",
-  //     name: "Ahad",
-  //     phoneNumber: "0123456787",
-  //     age: 32,
-  //     address: "2715 Ash Dr. San Jose, South Dakota 83475",
-  //     date: "2022-12-12",
-  //   },
-  //   {
-  //     key: "9",
-  //     email: "ahad.aiman@gmail.com",
-  //     name: "Ahad",
-  //     phoneNumber: "0123456787",
-  //     age: 32,
-  //     address: "2715 Ash Dr. San Jose, South Dakota 83475",
-  //     date: "2022-12-12",
-  //   },
-  //   {
-  //     key: "10",
-  //     email: "ahad.aiman@gmail.com",
-  //     name: "Ahad",
-  //     phoneNumber: "0123456787",
-  //     age: 32,
-  //     address: "2715 Ash Dr. San Jose, South Dakota 83475",
-  //     date: "2022-12-12",
-  //   },
-  // ];
-console.log(data)
+ 
+  // console.log(data);
   const handleView = (record) => {
     setUser(record);
     setIsModalOpen(true);
@@ -115,7 +26,7 @@ console.log(data)
       title: "#SI",
       dataIndex: "",
       key: "",
-      render: (text, _, index) => (currentPage - 1) * 10 + index + 1,
+      render: (text, _, index) => (currentPage - 1) * 15 + index + 1,
     },
     {
       title: "User Name",
@@ -154,11 +65,8 @@ console.log(data)
       ),
     },
   ];
-  if (isLoading) {
-    return <h1 className="text-center my-5">Loading....</h1>;
-  }
   if (isError) {
-    return <h1>Something want wrong!</h1>;
+    return <h1 className="text-center">Something want wrong!</h1>;
   }
   const tableData = data?.data?.map((user, index) => ({
     key: index + 1,
@@ -194,13 +102,13 @@ console.log(data)
           }}
         >
           <Table
+            loading={isLoading}
             pagination={{
               position: ["bottomCenter"],
               current: currentPage,
-              // pageSize:10,
-              // total:usersAll?.pagination?.Users,
-              // showSizeChanger: false,
-              //   onChange: handleChangePage,
+              onChange: (page) => setCurrentPage(page),
+              total: data?.pagination?.totalData,
+              pageSize: 15,
             }}
             // pagination={false}
             columns={columns}

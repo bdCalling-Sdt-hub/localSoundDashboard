@@ -13,7 +13,10 @@ const Withdraw = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState();
-  const { data, isLoading, isError } = useGetAllWithdrawRequestQuery(undefined);
+  const { data, isLoading, isError } = useGetAllWithdrawRequestQuery([
+    { name: "page", value: currentPage },
+    { name: "limit", value: "10" },
+  ]);
   const [updateStatus] = useUpdateWithdrawStatusMutation();
 
   const handleView = (record) => {
@@ -121,7 +124,7 @@ const Withdraw = () => {
               suffixIcon
             /> */}
       </div>
-      <LoaderWraperComp isError={isError} isLoading={isLoading}>
+      <LoaderWraperComp isError={isError} isLoading={false}>
         <div className="bg-secondary w-full  border-2 rounded-t-lg mt-[24px] ">
           <div className="flex py-[22px] mx-[20px] justify-between items-center">
             <p className=" test-[24px] font-bold">Withdraw Request List</p>
@@ -139,13 +142,13 @@ const Withdraw = () => {
             }}
           >
             <Table
+              loading={isLoading}
               pagination={{
                 position: ["bottomCenter"],
                 current: currentPage,
-                // pageSize:10,
-                // total:usersAll?.pagination?.Users,
-                // showSizeChanger: false,
-                //   onChange: handleChangePage,
+                onChange: (page) => setCurrentPage(page),
+                total: data?.pagination?.totalData,
+                pageSize: 10,
               }}
               // pagination={false}
               columns={columns}
@@ -205,7 +208,7 @@ const Withdraw = () => {
                     type="primary"
                     className="px-[60px]"
                   >
-                    Reject 
+                    Reject
                   </Button>
                   <Button
                     onClick={() => handleStatus("APPROVED")}

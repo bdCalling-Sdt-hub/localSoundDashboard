@@ -3,8 +3,6 @@ import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import SubscriptionCard from "../../../Components/SubscriptionCard";
 import { useGetAllSubscriptionQuery } from "../../../redux/features/Subscription/subscription.api";
-import { Skeleton } from "antd";
-import MagnifingGlassLoader from "../../../Components/Spinners/MagnifingGlassLoader";
 import LoaderWraperComp from "../../../Components/LoaderWraperComp";
 
 const Subscription = () => {
@@ -14,7 +12,7 @@ const Subscription = () => {
   //   return <MagnifingGlassLoader />;
   // }
   // if (isError) {
-  //   return <h1>Something want wrong!</h1>;
+  //   return <h1 className="text-center">Something want wrong!</h1>;
   // }
 
   //   const subscription = [

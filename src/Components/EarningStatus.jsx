@@ -1,14 +1,21 @@
+import { Skeleton } from "antd";
 import { useGetTotalEaringQuery } from "../redux/features/Earnings/earingApi";
 
 const EarningStatus = () => {
   const { data, isError, isLoading } = useGetTotalEaringQuery();
 
-  console.log(data);
+  // console.log(data);
   if (isLoading) {
-    return <h1 className="text-center my-5">Loading....</h1>;
+    return  (
+      <div className="w-full grid grid-cols-3 gap-7 py-[36px]">
+        <Skeleton active className="w-full h-full " />
+        <Skeleton active className="w-full h-full " />
+        <Skeleton active className="w-full h-full " />
+      </div>
+    );
   }
   if (isError) {
-    return <h1>Something want wrong!</h1>;
+    return <h1 className="text-center">Something want wrong!</h1>;
   }
   return (
     <div className="grid grid-cols-3 gap-[24px] mt-[24px]">

@@ -1,7 +1,5 @@
-import { ConfigProvider, DatePicker, Modal, Space, Table } from "antd";
-import { Link } from "react-router-dom";
+import { ConfigProvider, Modal, Space, Table } from "antd";
 import { BsInfoCircle } from "react-icons/bs";
-import { RxCross2 } from "react-icons/rx";
 import { useState } from "react";
 import { useGetTransectionQuery } from "../redux/features/Earnings/earingApi";
 
@@ -10,15 +8,12 @@ const FullRecentTransaction = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [user, setUser] = useState();
   const { data, isError, isLoading } = useGetTransectionQuery([
-    {name:"limit", value: "40"}
+    { name: "page", value: currentPage },
+    { name: "limit", value: "15" },
   ]);
-  if (isLoading) {
-    return <h1 className="text-center my-5">Loading....</h1>;
-  }
   if (isError) {
-    return <h1>Something want wrong!</h1>;
+    return <h1 className="text-center">Something want wrong!</h1>;
   }
-  console.log(data?.data);
   const transData = data?.data?.map((user, index) => ({
     transactionId: user.transactionId,
     name: user.user.name,
@@ -232,13 +227,13 @@ const FullRecentTransaction = () => {
           }}
         >
           <Table
+            loading={isLoading}
             pagination={{
               position: ["bottomCenter"],
               current: currentPage,
-              // pageSize:10,
-              // total:usersAll?.pagination?.Users,
-              // showSizeChanger: false,
-              //   onChange: handleChangePage,
+              onChange: (page) => setCurrentPage(page),
+              total: data?.pagination?.totalData,
+              pageSize: 15,
             }}
             // pagination={false}
             columns={columns}

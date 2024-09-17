@@ -6,68 +6,64 @@ import { useState } from "react";
 import { useGetTransectionQuery } from "../redux/features/Earnings/earingApi";
 
 const RecentTransaction = () => {
-  const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [user, setUser] = useState();
   const { data, isError, isLoading } = useGetTransectionQuery(undefined);
-  if (isLoading) {
-    return <h1 className="text-center my-5">Loading....</h1>;
-  }
   if (isError) {
-    return <h1>Something want wrong!</h1>;
+    return <h1 className="text-center">Something want wrong!</h1>;
   }
-  const dataSource = [
-    {
-      key: "1",
-      transactionId: "12345678",
-      name: "Ahad",
-      subscription: "Gold",
-      providerName: "Ahad Hossain",
-      age: 32,
-      amount: 3000,
-      date: "2022-12-12",
-    },
-    {
-      key: "2",
-      transactionId: "12345678",
-      name: "Ahad",
-      subscription: "Gold",
-      providerName: "Ahad Hossain",
-      age: 32,
-      amount: 3000,
-      date: "2022-12-12",
-    },
-    {
-      key: "3",
-      transactionId: "12345678",
-      name: "Ahad",
-      subscription: "Gold",
-      providerName: "Ahad Hossain",
-      age: 32,
-      amount: 3000,
-      date: "2022-12-12",
-    },
-    {
-      key: "4",
-      transactionId: "12345678",
-      name: "Ahad",
-      providerName: "Ahad Hossain",
-      age: 32,
-      amount: 3000,
-      subscription: "Gold",
-      date: "2022-12-12",
-    },
-    {
-      key: "5",
-      transactionId: "12345678",
-      name: "Ahad",
-      subscription: "Gold",
-      providerName: "Ahad Hossain",
-      age: 32,
-      amount: 3000,
-      date: "2022-12-12",
-    },
-  ];
+  // const dataSource = [
+  //   {
+  //     key: "1",
+  //     transactionId: "12345678",
+  //     name: "Ahad",
+  //     subscription: "Gold",
+  //     providerName: "Ahad Hossain",
+  //     age: 32,
+  //     amount: 3000,
+  //     date: "2022-12-12",
+  //   },
+  //   {
+  //     key: "2",
+  //     transactionId: "12345678",
+  //     name: "Ahad",
+  //     subscription: "Gold",
+  //     providerName: "Ahad Hossain",
+  //     age: 32,
+  //     amount: 3000,
+  //     date: "2022-12-12",
+  //   },
+  //   {
+  //     key: "3",
+  //     transactionId: "12345678",
+  //     name: "Ahad",
+  //     subscription: "Gold",
+  //     providerName: "Ahad Hossain",
+  //     age: 32,
+  //     amount: 3000,
+  //     date: "2022-12-12",
+  //   },
+  //   {
+  //     key: "4",
+  //     transactionId: "12345678",
+  //     name: "Ahad",
+  //     providerName: "Ahad Hossain",
+  //     age: 32,
+  //     amount: 3000,
+  //     subscription: "Gold",
+  //     date: "2022-12-12",
+  //   },
+  //   {
+  //     key: "5",
+  //     transactionId: "12345678",
+  //     name: "Ahad",
+  //     subscription: "Gold",
+  //     providerName: "Ahad Hossain",
+  //     age: 32,
+  //     amount: 3000,
+  //     date: "2022-12-12",
+  //   },
+  // ];
   const transData = data?.data?.map((user, index) => ({
     transactionId: user.transactionId,
     name: user.user.name,
@@ -91,16 +87,6 @@ const RecentTransaction = () => {
       title: "User Name",
       dataIndex: "name",
       key: "name",
-      // render: (_, record) => (
-      //   <div className="flex gap-2 items-center">
-      //     <img
-      //       className="w-[34px] h-[34px] rounded-full"
-      //       src={`${import.meta.env.VITE_BASE_URL}${record?.image?.publicFileURL}`}
-      //       alt=""
-      //     />
-      //     <p className="font-medium">{record.name}</p>
-      //   </div>
-      // ),
     },
     {
       title: "Subscription",
@@ -163,14 +149,7 @@ const RecentTransaction = () => {
           }}
         >
           <Table
-            //   pagination={{
-            //     position: ["bottomCenter"],
-            //     current: currentPage,
-            //       // pageSize:10,
-            //       // total:usersAll?.pagination?.Users,
-            //       // showSizeChanger: false,
-            //     //   onChange: handleChangePage,
-            //   }}
+            loading={isLoading}
             pagination={false}
             columns={columns}
             dataSource={transData}

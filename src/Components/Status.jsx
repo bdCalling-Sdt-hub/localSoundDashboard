@@ -1,3 +1,4 @@
+import { Skeleton } from "antd";
 import { useGetTotalEaringQuery } from "../redux/features/Earnings/earingApi";
 import { useGetUserStatusQuery } from "../redux/features/Users/userApi";
 
@@ -10,10 +11,16 @@ const Status = () => {
     isLoading: userIsLoading,
   } = useGetUserStatusQuery();
   if (isLoading || userIsLoading) {
-    return <h1 className="text-center my-5">Loading....</h1>;
+    return (
+      <div className="w-full grid grid-cols-3 gap-7 py-[36px]">
+        <Skeleton active className="w-full h-full " />
+        <Skeleton active className="w-full h-full " />
+        <Skeleton active className="w-full h-full " />
+      </div>
+    );
   }
   if (isError || userIsError) {
-    return <h1>Something want wrong!</h1>;
+    return <h1 className="text-center">Something want wrong!</h1>;
   }
   const statusData = {
     totalEarning: data?.data?.totalEarnings,
