@@ -185,7 +185,6 @@ const Artists = () => {
         </Space>
       ),
     },
-    
   ];
   if (isLoading) {
     return <h1 className="text-center my-5">Loading....</h1>;
@@ -253,12 +252,12 @@ const Artists = () => {
         <div className="text-black bg-secondary w-full  border-2 rounded-t-lg">
           <div className="flex justify-center items-center gap-2 flex-col border-b border-b-gray-300">
             <p className=" text-[26px] font-bold mb-[16px] my-10">
-              Doctor Details
+              Artists Details
             </p>
           </div>
           <div className="p-[20px] ">
             <div className="flex justify-between border-b py-[16px]">
-              <p>Doctor Name: </p>
+              <p>User Name: </p>
               <p>{user?.name ? user?.name : "N/A"}</p>
             </div>
             <div className="flex justify-between border-b py-[16px]">
@@ -277,18 +276,18 @@ const Artists = () => {
               <p>Joining Date :</p>
               <p>{user?.date ? user?.date : "N/A"}</p>
             </div>
-            <div className="flex justify-between border-b py-[16px]">
-              <p>Specialized In:</p>
-              <p>{user?.specializedIn ? user?.specializedIn : "N/A"}</p>
-            </div>
-            <div className="flex justify-between border-b py-[16px]">
-              <p>Experience:</p>
-              <p>{user?.experience ? user?.experience : "N/A"}</p>
-            </div>
-            <div className="flex justify-between border-b py-[16px]">
-              <p>Clinic Address:</p>
-              <p>{user?.clinicAddress ? user?.clinicAddress : "N/A"}</p>
-            </div>
+            {/* <div className="flex justify-between border-b py-[16px]">
+            <p>Score:</p>
+            <p>
+              {user?.score ? user?.score : "N/A"}
+            </p>
+          </div> */}
+            {/* <div className="flex justify-between border-b py-[16px]">
+            <p>Driving license:</p>
+            <p className="text-secondary font-bold cursor-pointer">
+             Click Here
+            </p>
+          </div> */}
           </div>
         </div>
       </Modal>

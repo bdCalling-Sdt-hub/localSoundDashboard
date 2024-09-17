@@ -98,6 +98,7 @@ const EditProfileInformation = () => {
       });
     }
   };
+  // console.log(data)
   return (
     <div>
       <div

@@ -19,6 +19,7 @@ import Swal from "sweetalert2";
 import LoaderWraperComp from "../../../Components/LoaderWraperComp";
 
 const Resells = () => {
+  const [form] = Form.useForm();
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState();
@@ -27,20 +28,27 @@ const Resells = () => {
     useResellPriceUpdateMutation();
 
   // console.log(data);
-  const handleModal = (record) => {
+  const viewModal = (record) => {
     setModalData(record);
-    setIsModalOpen((c) => !c);
+    setIsModalOpen(true);
+  };
+  const cancleModal = () => {
+    form.resetFields();
+    setModalData({});
+    setIsModalOpen(false);
   };
   const onFinish = async (values) => {
     // console.log("Success:", values);
+    // return console.log(modalData);
     try {
       const res = await priceUpdate({
         data: { price: Number(values.price) },
         id: modalData.id,
       });
-      handleModal({});
+      cancleModal();
       // console.log(res);
       if (res?.data?.status == "success") {
+        cancleModal();
         Swal.fire({
           position: "top-center",
           icon: "success",
@@ -49,6 +57,7 @@ const Resells = () => {
           timer: 1500,
         });
       } else {
+        cancleModal();
         Swal.fire({
           icon: "error",
           title: "Error...",
@@ -57,7 +66,7 @@ const Resells = () => {
         });
       }
     } catch (error) {
-      //   // console.log("Registration Fail", error?.response?.data?.message);
+      cancleModal();
       Swal.fire({
         icon: "error",
         title: "Error...",
@@ -111,7 +120,7 @@ const Resells = () => {
       render: (_data, record) => (
         <Space size="middle">
           <BsInfoCircle
-            onClick={() => handleModal(record)}
+            onClick={() => viewModal(record)}
             size={18}
             className="text-primary cursor-pointer"
           />
@@ -119,7 +128,7 @@ const Resells = () => {
       ),
     },
   ];
-
+  // console.log(first)
   return (
     <LoaderWraperComp isError={isError} isLoading={isLoading}>
       <div>
@@ -165,8 +174,8 @@ const Resells = () => {
         </div>
         <Modal
           open={isModalOpen}
-          onOk={() => setIsModalOpen(false)}
-          onCancel={() => setIsModalOpen(false)}
+          onOk={cancleModal}
+          onCancel={cancleModal}
           footer={[]}
           closeIcon
         >
@@ -175,6 +184,7 @@ const Resells = () => {
               Update Price
             </p>
             <Form
+              ref={form}
               name="basic"
               labelCol={{
                 span: 8,
@@ -182,7 +192,7 @@ const Resells = () => {
               wrapperCol={{
                 span: 24,
               }}
-              initialValues={modalData}
+              // initialValues={modalData}
               onFinish={onFinish}
               onFinishFailed={onFinishFailed}
               autoComplete="off"

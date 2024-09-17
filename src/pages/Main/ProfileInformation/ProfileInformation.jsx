@@ -12,12 +12,13 @@ import { useGetUserByTokenQuery } from "../../../redux/features/Users/userApi";
 const ProfileInformation = () => {
   const navigate = useNavigate();
   const { data, isLoading, isError } = useGetUserByTokenQuery(undefined);
+  // console.log(data)
   return (
     <div>
       <div className="flex justify-between items-center ml-[14px] mt-[20px] mb-[33px]">
         <h1 className="text-[30px] font-medium">Profile Information</h1>
         <div
-          onClick={(e) => navigate(`/edit-profile/${data?.daata?.id}`)}
+          onClick={(e) => navigate(`/edit-profile/${data?.data?.id}`)}
           className="flex gap-2 items-center py-[15px]
                  px-[40px]
                   bg-primary
@@ -34,15 +35,15 @@ const ProfileInformation = () => {
         <div className="lg:flex ml-[14px] p-[36px] rounded-xl gap-5">
           <div className="w-[33%] bg-secondary rounded-xl ml-[24px] flex flex-col justify-center items-center gap-[30px] p-10">
             <div className="w-[242px] h-[242px] overflow-hidden rounded-full">
-            <img
-              className="rounded-full w-full h-full object-cover"
-              src={
-                data?.data?.image
-                  ? `${import.meta.env.VITE_SERVER_URL}/${data?.data?.image}`
-                  : adminUndraw
-              }
-              alt=""
-            />
+              <img
+                className="rounded-full w-full h-full object-cover"
+                src={
+                  data?.data?.image
+                    ? `${import.meta.env.VITE_SERVER_URL}/${data?.data?.image}`
+                    : adminUndraw
+                }
+                alt=""
+              />
             </div>
             <div className="flex flex-col justify-center items-center">
               <p className="text-[20px] ">
