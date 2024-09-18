@@ -1,5 +1,4 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import logo from "../../assets/dashboard-logo.png";
 import { BiSolidDashboard } from "react-icons/bi";
 import { HiOutlineUsers } from "react-icons/hi";
 import { CiSettings } from "react-icons/ci";
@@ -131,6 +130,21 @@ const Sidebar = () => {
               <div className="flex justify-start items-center gap-2">
                 <TfiCrown width={25} height={25} />
                 Subscription
+              </div>
+            </NavLink>
+            <NavLink
+              to="/resells"
+              className={({ isActive, isPending }) =>
+                isPending
+                  ? "flex text-[white] gap-2 cursor-pointer items-center text-[28px] font-medium p-[20px] bg-[#281F1F] m-[16px] rounded-lg"
+                  : isActive
+                  ? "flex text-primary gap-2 cursor-pointer items-center text-[22px] font-medium p-[20px] bg-secondary  mx-[16px] rounded-lg"
+                  : "flex  gap-2 cursor-pointer items-center text-[22px] font-medium p-[20px]  mx-[16px] rounded-lg"
+              }
+            >
+              <div className="flex justify-start items-center gap-2">
+                <GiMusicalScore width={35} height={35} />
+                Resells
               </div>
             </NavLink>
             <NavLink

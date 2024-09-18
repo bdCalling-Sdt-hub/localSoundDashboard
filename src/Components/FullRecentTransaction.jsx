@@ -1,12 +1,20 @@
 import { ConfigProvider, Modal, Space, Table } from "antd";
 import { BsInfoCircle } from "react-icons/bs";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useGetTransectionQuery } from "../redux/features/Earnings/earingApi";
+import { useReactToPrint } from "react-to-print";
 
 const FullRecentTransaction = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [user, setUser] = useState();
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: "Transaction Details",
+    // onAfterPrint: () => alert("Print success"),
+  });
+
   const { data, isError, isLoading } = useGetTransectionQuery([
     { name: "page", value: currentPage },
     { name: "limit", value: "15" },
@@ -249,7 +257,10 @@ const FullRecentTransaction = () => {
         footer={[]}
         closeIcon
       >
-        <div className="text-black bg-secondary w-full  border-2 rounded-t-lg">
+        <div
+          ref={componentRef}
+          className="text-black bg-secondary print:bg-white w-full border-2 print:border-0 rounded-t-lg "
+        >
           <div className="flex justify-center items-center gap-2 flex-col border-b border-b-gray-300">
             <p className=" text-[26px] font-bold mb-[16px] my-10">
               Transaction Details
@@ -270,7 +281,7 @@ const FullRecentTransaction = () => {
             </div>
             <div className="flex justify-between border-b py-[16px]">
               <p>Amount :</p>
-              <p>{user?.amount ? user?.amount : "N/A"}</p>
+              <p>{user?.amount ? user?.amount + " $" : "N/A"}</p>
             </div>
             {/* <div className="flex justify-between border-b py-[16px]">
             <p>Score:</p>
@@ -283,14 +294,20 @@ const FullRecentTransaction = () => {
               <p>{user?.providerName ? user?.providerName : "N/A"}</p>
             </div>
 
-            <div className="flex justify-center gap-4 items-center pt-[16px]">
-              <p className="px-[35px] cursor-pointer py-[10px] bg-white border-2 border-primary text-primary font-normal rounded-lg">
+            <div className="flex justify-center gap-4 items-center pt-[16px] print:hidden">
+              <button className="px-[35px] cursor-pointer py-[10px] bg-white border-2 border-primary text-primary font-normal rounded-lg">
                 Download
-              </p>
-              <p className="px-[55px] cursor-pointer py-[10px] bg-primary text-white rounded-lg">
+              </button>
+              <button
+                onClick={handlePrint}
+                className="px-[55px] cursor-pointer py-[10px] bg-primary text-white rounded-lg"
+              >
                 {/* Regular P550 */}
                 Print
-              </p>
+              </button>
+            </div>
+            <div className="hidden print:block text-center py-7 text-xl text-blue-500">
+              🎶 Provide by LocalSound-Music 🎶
             </div>
           </div>
         </div>

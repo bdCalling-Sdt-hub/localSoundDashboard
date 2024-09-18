@@ -7,7 +7,7 @@ const EarningStatus = () => {
   // console.log(data);
   if (isLoading) {
     return  (
-      <div className="w-full grid grid-cols-3 gap-7 py-[36px]">
+      <div className="w-full grid grid-cols-3 gap-7 py-[33px]">
         <Skeleton active className="w-full h-full " />
         <Skeleton active className="w-full h-full " />
         <Skeleton active className="w-full h-full " />

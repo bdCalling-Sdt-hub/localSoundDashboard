@@ -1,7 +1,5 @@
 import { ConfigProvider, DatePicker, Modal, Space, Table } from "antd";
-import { Link } from "react-router-dom";
 import { BsInfoCircle } from "react-icons/bs";
-import { RxCross2 } from "react-icons/rx";
 import { useState } from "react";
 import { useGetAllUserQuery } from "../../../redux/features/Users/userApi";
 

@@ -13,9 +13,6 @@ import EditProfileInformation from "../pages/Main/EditProfileInformation/EditPro
 import DashboardHome from "../pages/Main/DashboardHome/DashboardHome";
 import Earnings from "../pages/Main/Earnings/Earnings";
 import AllUser from "../pages/Main/AllUser/AllUser";
-import Providers from "../pages/Main/Providers/Providers";
-import Categories from "../pages/Main/Categories/Categories";
-import AddCategory from "../pages/Main/AddCategory/AddCategory";
 import EditCategory from "../pages/Main/EditCategory/EditCategory";
 import Withdraw from "../pages/Main/Withdraw/Withdraw";
 import Settings from "../pages/Main/Settings/Settings";
@@ -50,10 +47,10 @@ const router = createBrowserRouter([
                 path: "/artists",
                 element: <Artists />,
               },
-              // {
-              //   path: "/resells",
-              //   element: <Resells />,
-              // },
+              {
+                path: "/resells",
+                element: <Resells />,
+              },
               {
                 path: "/appointments",
                 element: <Appointments />,

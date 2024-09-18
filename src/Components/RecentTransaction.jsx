@@ -1,7 +1,5 @@
-import { ConfigProvider, DatePicker, Modal, Space, Table } from "antd";
-import { Link } from "react-router-dom";
+import { ConfigProvider, Modal, Space, Table } from "antd";
 import { BsInfoCircle } from "react-icons/bs";
-import { RxCross2 } from "react-icons/rx";
 import { useState } from "react";
 import { useGetTransectionQuery } from "../redux/features/Earnings/earingApi";
 
